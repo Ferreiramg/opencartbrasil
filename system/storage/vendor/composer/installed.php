@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'e52fe5d553eb9ddc06eb01ce760105d088228e35',
+    'reference' => '6b08d52515b4900d9db38c148ab3edc03eca3679',
     'name' => 'opencartbrasil/opencartbrasil',
   ),
   'versions' => 
@@ -117,7 +117,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'e52fe5d553eb9ddc06eb01ce760105d088228e35',
+      'reference' => '6b08d52515b4900d9db38c148ab3edc03eca3679',
     ),
     'psr/log' => 
     array (
