@@ -1,0 +1,9 @@
+{
+    "name": "OpenCart Buildpack",
+	"description": "Opencart build app",
+	"description": "Deploy your favorite eCommerce on Heroku using our OpenCart buildpack.",
+	"repository": "https://github.com/Ferreiramg/opencartbrasil",
+	"logo": "https://camo.githubusercontent.com/19690cdef6c019daa1796f547cbc6a3a261a975a76eea4b5e143161d4414b225/68747470733a2f2f666f72756d2e6f70656e6361727462726173696c2e636f6d2e62722f6578742f7369746573706c61742f666c6174626f6f74736d696e69636d732f696d616765732f6c6f676f2f6c6f676f2d636f6c6f726964612e706e67",
+	"keywords": ["opencart", "heroku", "php", "mysql", "apache", "apache2", "nginx"],
+	"addons": ["cleardb:ignite","newrelic:wayne","sendgrid:starter"]
+}
