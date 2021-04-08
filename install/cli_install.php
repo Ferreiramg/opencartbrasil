@@ -57,7 +57,8 @@ set_error_handler(function ($code, $message, $file, $line, array $errcontext) {
 	throw new ErrorException($message, 0, $code, $file, $line);
 });
 
-function usage() {
+function usage()
+{
 	echo "Uso:\n";
 	echo "======\n";
 	echo "\n";
@@ -77,7 +78,8 @@ function usage() {
 	echo 'php cli_install.php install ' . $options . "\n\n";
 }
 
-function get_options($argv) {
+function get_options($argv)
+{
 	$defaults = array(
 		'db_driver'   => 'mysqli',
 		'db_hostname' => 'localhost',
@@ -89,20 +91,21 @@ function get_options($argv) {
 
 	$options = array();
 	$total = count($argv);
-	for ($i=0; $i < $total; $i=$i+2) {
+	for ($i = 0; $i < $total; $i = $i + 2) {
 		$is_flag = preg_match('/^--(.*)$/', $argv[$i], $match);
 
 		if (!$is_flag) {
 			throw new Exception('O argumento ' . $argv[$i] . ' não é válido, pois argumentos devem começar com \'--\'');
 		}
 
-		$options[$match[1]] = $argv[$i+1];
+		$options[$match[1]] = $argv[$i + 1];
 	}
 
 	return array_merge($defaults, $options);
 }
 
-function valid($options) {
+function valid($options)
+{
 	$required = array(
 		'db_driver',
 		'db_hostname',
@@ -133,7 +136,8 @@ function valid($options) {
 	return array($valid, $missing);
 }
 
-function install($options) {
+function install($options)
+{
 	$check = check_requirements();
 	if ($check[0]) {
 		setup_db($options);
@@ -145,7 +149,34 @@ function install($options) {
 	}
 }
 
-function check_requirements() {
+function manualyInstall()
+{
+	$sqldb = parse_url(getenv('CLEARDB_DATABASE_URL'));
+	$host = $sqldb['host'];
+	// $port = $sqldb['port'];
+	$base = ltrim($sqldb['path'], '/');
+	$user = $sqldb['user'];
+	$pass = $sqldb['pass'];
+	
+	$required = array(
+		'db_driver' => 'mysqli',
+		'db_hostname' => $host,
+		'db_username' => $user,
+		'db_password' => $pass,
+		'db_database' => $base,
+		'db_port' => 3306,
+		'db_prefix' => 'oc_',
+		'username' => 'admin',
+		'password' => 'yyz2112',
+		'email' => 'luis@lpdeveloper.com.br',
+		'http_server' => 'https://lp-cart.herokuapp.com/',
+	);
+	setup_db($required);
+	dir_permissions();
+}
+
+function check_requirements()
+{
 	$error = null;
 	if (version_compare(phpversion(), '5.6', '<')) {
 		$error = 'Atenção: Você precisa utilizar o PHP 5.6 ou superior para o projeto OpenCart Brasil funcionar!';
@@ -182,7 +213,8 @@ function check_requirements() {
 	return array($error === null, $error);
 }
 
-function setup_db($data) {
+function setup_db($data)
+{
 	$db = new DB($data['db_driver'], htmlspecialchars_decode($data['db_hostname']), htmlspecialchars_decode($data['db_username']), htmlspecialchars_decode($data['db_password']), htmlspecialchars_decode($data['db_database']), $data['db_port']);
 
 	$file = DIR_APPLICATION . 'opencart.sql';
@@ -228,7 +260,8 @@ function setup_db($data) {
 	}
 }
 
-function write_config_files($options) {
+function write_config_files($options)
+{
 	$output  = '<?php' . "\n";
 	$output .= '// HTTP' . "\n";
 	$output .= 'define(\'HTTP_SERVER\', \'' . $options['http_server'] . '\');' . "\n\n";
@@ -278,7 +311,7 @@ function write_config_files($options) {
 	$output .= '// DIR' . "\n";
 	$output .= 'define(\'DIR_APPLICATION\', \'' . addslashes(DIR_OPENCART) . 'admin/\');' . "\n";
 	$output .= 'define(\'DIR_SYSTEM\', \'' . addslashes(DIR_OPENCART) . 'system/\');' . "\n";
-	$output .= 'define(\'DIR_IMAGE\', \'' . addslashes(DIR_OPENCART) . 'image/\');' . "\n";	
+	$output .= 'define(\'DIR_IMAGE\', \'' . addslashes(DIR_OPENCART) . 'image/\');' . "\n";
 	$output .= 'define(\'DIR_STORAGE\', DIR_SYSTEM . \'storage/\');' . "\n";
 	$output .= 'define(\'DIR_CATALOG\', \'' . addslashes(DIR_OPENCART) . 'catalog/\');' . "\n";
 	$output .= 'define(\'DIR_LANGUAGE\', DIR_APPLICATION . \'language/\');' . "\n";
@@ -310,7 +343,8 @@ function write_config_files($options) {
 	fclose($file);
 }
 
-function dir_permissions() {
+function dir_permissions()
+{
 	if (stripos(PHP_OS, 'linux') === 0) {
 		$dirs = array(
 			DIR_OPENCART . 'image/',
@@ -331,30 +365,37 @@ $subcommand = array_shift($argv);
 
 switch ($subcommand) {
 
-case "install":
-	try {
-		$options = get_options($argv);
-		define('HTTP_OPENCART', $options['http_server']);
-		$valid = valid($options);
-		if (!$valid[0]) {
-			echo "Erro: As seguintes entradas estão ausentes ou são inválidas: ";
-			echo implode(', ', $valid[1]) . "\n\n";
+	case "install":
+		try {
+			$options = get_options($argv);
+			define('HTTP_OPENCART', $options['http_server']);
+			$valid = valid($options);
+			if (!$valid[0]) {
+				echo "Erro: As seguintes entradas estão ausentes ou são inválidas: ";
+				echo implode(', ', $valid[1]) . "\n\n";
+				exit(1);
+			}
+			install($options);
+			echo "\n### INSTALAÇÃO CONCLUÍDA! ###\n\n";
+			echo "O projeto OpenCart Brasil foi instalado em seu servidor\n\n";
+			echo "- IMPORTANTE:\n\n";
+			echo "Lembre-se de remover a pasta install por segurança\n\n";
+			echo "- URL DE ACESSO:\n\n";
+			echo "Loja: " . $options['http_server'] . "\n\n";
+			echo "Administração: " . $options['http_server'] . "admin/\n\n";
+		} catch (ErrorException $e) {
+			echo 'Erro: ' . $e->getMessage() . "\n";
 			exit(1);
 		}
-		install($options);
-		echo "\n### INSTALAÇÃO CONCLUÍDA! ###\n\n";
-		echo "O projeto OpenCart Brasil foi instalado em seu servidor\n\n";
-		echo "- IMPORTANTE:\n\n";
-		echo "Lembre-se de remover a pasta install por segurança\n\n";
-		echo "- URL DE ACESSO:\n\n";
-		echo "Loja: " . $options['http_server'] . "\n\n";
-		echo "Administração: " . $options['http_server'] . "admin/\n\n";
-	} catch (ErrorException $e) {
-		echo 'Erro: ' . $e->getMessage() . "\n";
-		exit(1);
-	}
-	break;
-case "usage":
-default:
-	echo usage();
+		break;
+	case "manual":
+		try {
+			manualyInstall();
+			echo "\n### INSTALAÇÃO CONCLUÍDA! ###\n\n";
+		} catch (\Throwable | Exception $th) {
+			echo $th->getMessage();
+		}
+	case "usage":
+	default:
+		echo usage();
 }
