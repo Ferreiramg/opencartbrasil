@@ -8,6 +8,7 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=5.6.0",
+	  "ext-gd": "*",
     "composer/installers": "~1.2",
     "cardinity/cardinity-sdk-php": "^1.0",
     "braintree/braintree_php": "3.2.0",
