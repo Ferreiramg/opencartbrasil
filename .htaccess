@@ -51,3 +51,6 @@ RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
 
 ## 7. Para desabilitar as limitações do open_basedir que pode ocasionar erros com sessões, remova o # da linha abaixo:
 # php_admin_value open_basedir none
+
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://lp-cart.herokuapp.com/$1 [R,L]

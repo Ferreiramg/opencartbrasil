@@ -37,10 +37,5 @@
   },
   "config": {
     "vendor-dir": "./system/storage/vendor/"
-  },
-  "scripts": {
-    "post-install-cmd": [
-        "php ./install/cli_install.php manual"
-    ]
   }
 }
