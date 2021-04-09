@@ -14,7 +14,7 @@ define('HTTP_SERVER', 'https://lp-cart.herokuapp.com/admin/');
 define('HTTP_CATALOG', 'https://lp-cart.herokuapp.com/');
 
 // HTTPS
-define('HTTPS_SERVER', 'hhttps://lp-cart.herokuapp.com/admin/');
+define('HTTPS_SERVER', 'https://lp-cart.herokuapp.com/admin/');
 define('HTTPS_CATALOG', 'https://lp-cart.herokuapp.com/');
 
 // DIR
